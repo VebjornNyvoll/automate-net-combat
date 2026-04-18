@@ -1,0 +1,8 @@
+{
+  "automate-net-combat": {
+    "settings": {
+      "enabled": "Enable Module",
+      "enabledHint": "Toggle this module's features on or off."
+    }
+  }
+}
