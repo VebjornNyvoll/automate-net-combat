@@ -1,0 +1,47 @@
+{
+  "_id": "KxJ38IoO46OOUf1K",
+  "_key": "!actors!KxJ38IoO46OOUf1K",
+  "name": "Asp",
+  "type": "blackIce",
+  "img": "icons/svg/mystery-man.svg",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "effects": [],
+  "items": [],
+  "flags": {
+    "automate-net-combat": {
+      "blackIceKey": "asp",
+      "effectText": "Deals 3d6 direct Brain damage to the Netrunner (bypasses armor)."
+    }
+  },
+  "system": {
+    "class": "antipersonnel",
+    "stats": {
+      "per": 4,
+      "spd": 3,
+      "atk": 4,
+      "def": 2,
+      "rez": {
+        "value": 15,
+        "max": 15
+      }
+    },
+    "notes": "<p><em>Anti-Personnel Black ICE.</em> Small, fast-moving, and venomous. Delivers targeted attacks on a Netrunner's neural link.</p><p><strong>Effect:</strong> 3d6 direct Brain damage. Ignores SP from cyberware armor.</p>"
+  },
+  "prototypeToken": {
+    "name": "Asp",
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 20,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "stats.rez"
+    },
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  }
+}

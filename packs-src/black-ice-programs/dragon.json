@@ -1,0 +1,50 @@
+{
+  "_id": "vNdFLq52jyz0nk2I",
+  "_key": "!items!vNdFLq52jyz0nk2I",
+  "name": "Dragon",
+  "type": "program",
+  "img": "icons/svg/mystery-man.svg",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "automate-net-combat": {
+      "blackIceKey": "dragon",
+      "effectText": "Deals 3d6 direct Brain damage and Stuns the Netrunner (they skip their next turn)."
+    }
+  },
+  "system": {
+    "class": "blackice",
+    "blackIceType": "antipersonnel",
+    "per": 6,
+    "spd": 2,
+    "atk": 8,
+    "def": 6,
+    "rez": 30,
+    "damage": {
+      "blackIce": "1d6",
+      "standard": "3d6"
+    },
+    "description": {
+      "value": "<p><em>Anti-Personnel Black ICE.</em> The apex predator of NET combat. Huge, slow, and devastating.</p><p><strong>Effect:</strong> 3d6 direct Brain damage. The Netrunner is Stunned and loses their next turn.</p>"
+    },
+    "favorite": false,
+    "installLocation": "mall",
+    "interface": 0,
+    "isRezzed": false,
+    "price": {
+      "market": 0
+    },
+    "prototypeActor": "",
+    "revealed": true,
+    "size": 1,
+    "source": {
+      "book": "Core",
+      "page": 201
+    },
+    "usage": "toggled"
+  }
+}

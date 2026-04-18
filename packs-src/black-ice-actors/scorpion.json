@@ -1,0 +1,47 @@
+{
+  "_id": "KHAitE5yQd9oU4dX",
+  "_key": "!actors!KHAitE5yQd9oU4dX",
+  "name": "Scorpion",
+  "type": "blackIce",
+  "img": "icons/svg/mystery-man.svg",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "effects": [],
+  "items": [],
+  "flags": {
+    "automate-net-combat": {
+      "blackIceKey": "scorpion",
+      "effectText": "Deals 3d6 direct Brain damage. If the Netrunner is killed, alerts corps to the break-in."
+    }
+  },
+  "system": {
+    "class": "antipersonnel",
+    "stats": {
+      "per": 4,
+      "spd": 4,
+      "atk": 6,
+      "def": 4,
+      "rez": {
+        "value": 20,
+        "max": 20
+      }
+    },
+    "notes": "<p><em>Anti-Personnel Black ICE.</em> A lethal mid-range combatant optimized for clean kills.</p><p><strong>Effect:</strong> 3d6 direct Brain damage. If this attack reduces the Netrunner to 0 HP, the Architecture's owner receives an immediate alert.</p>"
+  },
+  "prototypeToken": {
+    "name": "Scorpion",
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 20,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "stats.rez"
+    },
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  }
+}

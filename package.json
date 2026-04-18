@@ -1,0 +1,13 @@
+{
+  "name": "automate-net-combat",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Build tooling for the Automate Net Combat Foundry VTT module.",
+  "scripts": {
+    "build:packs": "node tools/build-packs.mjs"
+  },
+  "devDependencies": {
+    "@foundryvtt/foundryvtt-cli": "^1.0.4"
+  }
+}

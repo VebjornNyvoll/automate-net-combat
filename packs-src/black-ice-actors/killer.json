@@ -1,0 +1,47 @@
+{
+  "_id": "u4BnGWM2aZ75ZMK9",
+  "_key": "!actors!u4BnGWM2aZ75ZMK9",
+  "name": "Killer",
+  "type": "blackIce",
+  "img": "icons/svg/mystery-man.svg",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "effects": [],
+  "items": [],
+  "flags": {
+    "automate-net-combat": {
+      "blackIceKey": "killer",
+      "effectText": "Deals 3d6 direct Brain damage."
+    }
+  },
+  "system": {
+    "class": "antipersonnel",
+    "stats": {
+      "per": 6,
+      "spd": 4,
+      "atk": 8,
+      "def": 4,
+      "rez": {
+        "value": 20,
+        "max": 20
+      }
+    },
+    "notes": "<p><em>Anti-Personnel Black ICE.</em> A clean, efficient assassin. High speed, high attack, lethal.</p><p><strong>Effect:</strong> 3d6 direct Brain damage.</p>"
+  },
+  "prototypeToken": {
+    "name": "Killer",
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 20,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "stats.rez"
+    },
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  }
+}

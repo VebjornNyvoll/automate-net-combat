@@ -1,0 +1,47 @@
+{
+  "_id": "ZGjkJV4Au8c2cp3x",
+  "_key": "!actors!ZGjkJV4Au8c2cp3x",
+  "name": "Skunk",
+  "type": "blackIce",
+  "img": "icons/svg/mystery-man.svg",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "effects": [],
+  "items": [],
+  "flags": {
+    "automate-net-combat": {
+      "blackIceKey": "skunk",
+      "effectText": "Derezzes every Program currently rezzed on the target Netrunner's Cyberdeck."
+    }
+  },
+  "system": {
+    "class": "antiprogram",
+    "stats": {
+      "per": 4,
+      "spd": 2,
+      "atk": 2,
+      "def": 2,
+      "rez": {
+        "value": 15,
+        "max": 15
+      }
+    },
+    "notes": "<p><em>Anti-Program Black ICE.</em> Cheap, unglamorous, devastating to a Netrunner's arsenal.</p><p><strong>Effect:</strong> On a successful attack, every Program currently rezzed on the target Netrunner's Cyberdeck is immediately derezzed.</p>"
+  },
+  "prototypeToken": {
+    "name": "Skunk",
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 20,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "stats.rez"
+    },
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  }
+}

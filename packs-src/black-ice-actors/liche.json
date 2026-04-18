@@ -1,0 +1,47 @@
+{
+  "_id": "hyn5cBdcCE0umfdb",
+  "_key": "!actors!hyn5cBdcCE0umfdb",
+  "name": "Liche",
+  "type": "blackIce",
+  "img": "icons/svg/mystery-man.svg",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "effects": [],
+  "items": [],
+  "flags": {
+    "automate-net-combat": {
+      "blackIceKey": "liche",
+      "effectText": "Deals 2d6 direct Brain damage. The Netrunner loses 1 NET Action per turn until the Liche is defeated."
+    }
+  },
+  "system": {
+    "class": "antipersonnel",
+    "stats": {
+      "per": 6,
+      "spd": 4,
+      "atk": 6,
+      "def": 6,
+      "rez": {
+        "value": 25,
+        "max": 25
+      }
+    },
+    "notes": "<p><em>Anti-Personnel Black ICE.</em> An intelligent construct that locks up a Netrunner's reactions.</p><p><strong>Effect:</strong> 2d6 direct Brain damage. The Netrunner's Meat and NET Actions per turn are reduced by 1 as long as the Liche is active.</p>"
+  },
+  "prototypeToken": {
+    "name": "Liche",
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 20,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "stats.rez"
+    },
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  }
+}

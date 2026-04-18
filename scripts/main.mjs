@@ -1,26 +1,68 @@
-const MODULE_ID = "automate-net-combat";
+import { MODULE_ID, SETTINGS } from "./config.mjs";
+import { registerLinkHooks } from "./links.mjs";
+import { registerSummonControls } from "./ui/scene-controls.mjs";
+import { registerSheetInjection } from "./ui/sheet-injection.mjs";
+import { registerAutoSpawn } from "./tracker.mjs";
+import { summonBlackIce } from "./summon.mjs";
+import { executeBlackIceAttack } from "./combat.mjs";
 
-/**
- * Initialize module - register settings, hooks, and configuration.
- */
 Hooks.once("init", () => {
-  console.log(`${MODULE_ID} | Initializing`);
+  console.log(`${MODULE_ID} | init`);
 
-  // Register module settings
-  game.settings.register(MODULE_ID, "enabled", {
-    name: game.i18n.localize(`${MODULE_ID}.settings.enabled`),
-    hint: game.i18n.localize(`${MODULE_ID}.settings.enabledHint`),
+  game.settings.register(MODULE_ID, SETTINGS.AUTO_COMBAT, {
+    name: `${MODULE_ID}.settings.autoCombat.name`,
+    hint: `${MODULE_ID}.settings.autoCombat.hint`,
     scope: "world",
     config: true,
     type: Boolean,
     default: true,
   });
+
+  game.settings.register(MODULE_ID, SETTINGS.AUTO_DESTROY, {
+    name: `${MODULE_ID}.settings.autoDestroy.name`,
+    hint: `${MODULE_ID}.settings.autoDestroy.hint`,
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register(MODULE_ID, SETTINGS.SHOW_HUD_BUTTON, {
+    name: `${MODULE_ID}.settings.showHud.name`,
+    hint: `${MODULE_ID}.settings.showHud.hint`,
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register(MODULE_ID, "autoSpawnOnTileCross", {
+    name: `${MODULE_ID}.settings.autoSpawn.name`,
+    hint: `${MODULE_ID}.settings.autoSpawn.hint`,
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false,
+  });
 });
 
-/**
- * Module ready - world data is loaded, safe to access actors/items.
- */
 Hooks.once("ready", () => {
-  if (!game.settings.get(MODULE_ID, "enabled")) return;
-  console.log(`${MODULE_ID} | Ready`);
+  registerLinkHooks();
+  registerSummonControls();
+  registerSheetInjection();
+  if (game.settings.get(MODULE_ID, "autoSpawnOnTileCross")) {
+    registerAutoSpawn();
+  }
+
+  // Public API — other modules and macros can call these directly.
+  const moduleData = game.modules.get(MODULE_ID);
+  if (moduleData) {
+    moduleData.api = {
+      summonBlackIce,
+      executeBlackIceAttack,
+    };
+    Hooks.callAll(`${MODULE_ID}.ready`, moduleData.api);
+  }
+
+  console.log(`${MODULE_ID} | ready`);
 });

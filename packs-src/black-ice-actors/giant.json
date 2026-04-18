@@ -1,0 +1,47 @@
+{
+  "_id": "wTi1PpVt32Uhid23",
+  "_key": "!actors!wTi1PpVt32Uhid23",
+  "name": "Giant",
+  "type": "blackIce",
+  "img": "icons/svg/mystery-man.svg",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "effects": [],
+  "items": [],
+  "flags": {
+    "automate-net-combat": {
+      "blackIceKey": "giant",
+      "effectText": "Deals 1d6 damage to every Program currently rezzed on the target Netrunner's Cyberdeck."
+    }
+  },
+  "system": {
+    "class": "antiprogram",
+    "stats": {
+      "per": 6,
+      "spd": 2,
+      "atk": 6,
+      "def": 4,
+      "rez": {
+        "value": 30,
+        "max": 30
+      }
+    },
+    "notes": "<p><em>Anti-Program Black ICE.</em> A brutal, slow-moving mass that crushes every running program it encounters.</p><p><strong>Effect:</strong> 1d6 damage to the REZ of every Program on the target Netrunner's Cyberdeck.</p>"
+  },
+  "prototypeToken": {
+    "name": "Giant",
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 20,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "stats.rez"
+    },
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  }
+}

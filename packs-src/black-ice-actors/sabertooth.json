@@ -1,0 +1,47 @@
+{
+  "_id": "qW9sXmtjkUh7Fbhf",
+  "_key": "!actors!qW9sXmtjkUh7Fbhf",
+  "name": "Sabertooth",
+  "type": "blackIce",
+  "img": "icons/svg/mystery-man.svg",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "effects": [],
+  "items": [],
+  "flags": {
+    "automate-net-combat": {
+      "blackIceKey": "sabertooth",
+      "effectText": "Deals 4d6 direct Brain damage."
+    }
+  },
+  "system": {
+    "class": "antipersonnel",
+    "stats": {
+      "per": 4,
+      "spd": 4,
+      "atk": 6,
+      "def": 4,
+      "rez": {
+        "value": 25,
+        "max": 25
+      }
+    },
+    "notes": "<p><em>Anti-Personnel Black ICE.</em> Heavy-hitting predator — not the fastest, but it makes every bite count.</p><p><strong>Effect:</strong> 4d6 direct Brain damage.</p>"
+  },
+  "prototypeToken": {
+    "name": "Sabertooth",
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 20,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "stats.rez"
+    },
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  }
+}

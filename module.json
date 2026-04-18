@@ -1,7 +1,7 @@
 {
   "id": "automate-net-combat",
   "title": "Automate Net Combat",
-  "description": "Automate Black ICE netrunning combat — create black-ice programs, spawn linked black-ice actors on the map, and apply black-ice attack damage to programs automatically.",
+  "description": "Automate Black ICE netrunning combat — spawn fully-statted Black ICE from a compendium, link them to a target netrunner, and apply attack damage to programs or HP automatically.",
   "version": "0.1.0",
   "authors": [
     {
@@ -23,6 +23,24 @@
       "path": "languages/en.json"
     }
   ],
+  "packs": [
+    {
+      "name": "black-ice-actors",
+      "label": "Black ICE Actors",
+      "path": "packs/black-ice-actors",
+      "type": "Actor",
+      "system": "cyberpunk-red-core",
+      "ownership": { "PLAYER": "NONE", "ASSISTANT": "OWNER" }
+    },
+    {
+      "name": "black-ice-programs",
+      "label": "Black ICE Programs",
+      "path": "packs/black-ice-programs",
+      "type": "Item",
+      "system": "cyberpunk-red-core",
+      "ownership": { "PLAYER": "NONE", "ASSISTANT": "OWNER" }
+    }
+  ],
   "relationships": {
     "systems": [
       {
@@ -32,6 +50,18 @@
           "minimum": "0.89.1",
           "verified": "0.89.2"
         }
+      }
+    ],
+    "recommends": [
+      {
+        "id": "cpr-netrunning-architect",
+        "type": "module",
+        "reason": "Tile-based NET architecture — this module auto-detects Black ICE tiles placed by the architect."
+      },
+      {
+        "id": "lib-wrapper",
+        "type": "module",
+        "reason": "Safer coexistence with other modules that touch the same hooks."
       }
     ]
   },

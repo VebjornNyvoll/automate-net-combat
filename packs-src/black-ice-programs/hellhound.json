@@ -1,0 +1,50 @@
+{
+  "_id": "x4Vd6Q6Z6JzJrhXs",
+  "_key": "!items!x4Vd6Q6Z6JzJrhXs",
+  "name": "Hellhound",
+  "type": "program",
+  "img": "icons/svg/mystery-man.svg",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "automate-net-combat": {
+      "blackIceKey": "hellhound",
+      "effectText": "Deals 2d6 direct Brain damage. The Netrunner catches fire: takes 2d6 direct Brain damage at the start of each of their following turns until they Jack Out."
+    }
+  },
+  "system": {
+    "class": "blackice",
+    "blackIceType": "antipersonnel",
+    "per": 6,
+    "spd": 4,
+    "atk": 6,
+    "def": 4,
+    "rez": 20,
+    "damage": {
+      "blackIce": "1d6",
+      "standard": "2d6"
+    },
+    "description": {
+      "value": "<p><em>Anti-Personnel Black ICE.</em> A burning predator that latches on and won't let go.</p><p><strong>Effect:</strong> 2d6 direct Brain damage, plus a persistent 2d6 direct Brain damage tick at the start of each of the Netrunner's subsequent turns until they Jack Out or the Hellhound is defeated.</p>"
+    },
+    "favorite": false,
+    "installLocation": "mall",
+    "interface": 0,
+    "isRezzed": false,
+    "price": {
+      "market": 0
+    },
+    "prototypeActor": "",
+    "revealed": true,
+    "size": 1,
+    "source": {
+      "book": "Core",
+      "page": 201
+    },
+    "usage": "toggled"
+  }
+}

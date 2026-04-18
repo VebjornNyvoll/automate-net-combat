@@ -1,8 +1,58 @@
 {
   "automate-net-combat": {
     "settings": {
-      "enabled": "Enable Module",
-      "enabledHint": "Toggle this module's features on or off."
+      "autoCombat": {
+        "name": "Auto-add Black ICE to combat",
+        "hint": "When a Black ICE is summoned, automatically add it as a combatant with initiative rolled from its SPD."
+      },
+      "autoDestroy": {
+        "name": "Auto-derez programs at 0 REZ",
+        "hint": "When a program's REZ is reduced to 0 by a Black ICE attack, automatically flip isRezzed to false."
+      },
+      "showHud": {
+        "name": "Show Tile HUD summon button",
+        "hint": "Display a 'Summon Black ICE' button on the Tile HUD for any tile detected as a Black ICE tile (from flags or texture name)."
+      },
+      "autoSpawn": {
+        "name": "Auto-spawn Black ICE on tile crossing (experimental)",
+        "hint": "When a netrunner token moves onto a Black ICE tile, automatically summon the corresponding Black ICE. Disabled by default."
+      }
+    },
+    "controls": {
+      "summonBlackIce": "Summon Black ICE"
+    },
+    "sheet": {
+      "attack": "Attack"
+    },
+    "dialog": {
+      "summonTitle": "Summon Black ICE",
+      "summonPrompt": "Pick a Black ICE type to summon, then click the target netrunner on the canvas.",
+      "blackIceType": "Black ICE",
+      "pickTarget": "Pick Target…",
+      "cancel": "Cancel"
+    },
+    "prompts": {
+      "pickNetrunner": "Click the target netrunner's token. Esc to cancel.",
+      "invalidNetrunner": "That actor doesn't appear to be a netrunner (no cyberdeck).",
+      "pickAttackTarget": "Click the attack target. Esc to cancel."
+    },
+    "notifications": {
+      "gmOnly": "Only the GM can summon Black ICE.",
+      "noScene": "No active scene to drop a Black ICE token on.",
+      "unknownKey": "Unknown Black ICE key: {key}",
+      "packsMissing": "This module's compendium packs aren't loaded. Is the module enabled?",
+      "packEntryMissing": "No pack entry found for Black ICE '{key}'.",
+      "summoned": "Summoned {name} targeting {target}.",
+      "notBlackIce": "Selected actor is not a Black ICE.",
+      "noLinkedProgram": "This Black ICE has no linked program item.",
+      "programDestroyed": "Program {name} has been destroyed (REZ reduced to 0)."
+    },
+    "attack": {
+      "flavorProgram": "{attacker} attacks {target}'s running programs",
+      "flavorBrain": "{attacker} strikes at {target}'s neural link"
+    },
+    "generic": {
+      "noTarget": "(no target)"
     }
   }
 }

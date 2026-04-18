@@ -1,0 +1,47 @@
+{
+  "_id": "0C6u90lIvaJ4McPW",
+  "_key": "!actors!0C6u90lIvaJ4McPW",
+  "name": "Raven",
+  "type": "blackIce",
+  "img": "icons/svg/mystery-man.svg",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "effects": [],
+  "items": [],
+  "flags": {
+    "automate-net-combat": {
+      "blackIceKey": "raven",
+      "effectText": "Traces the Netrunner's meat-space location and alerts the Architecture's owner. No damage."
+    }
+  },
+  "system": {
+    "class": "antipersonnel",
+    "stats": {
+      "per": 8,
+      "spd": 3,
+      "atk": 4,
+      "def": 2,
+      "rez": {
+        "value": 15,
+        "max": 15
+      }
+    },
+    "notes": "<p><em>Anti-Personnel Black ICE (Tracker).</em> Does no damage, but quietly pinpoints the Netrunner's physical location and alerts the owner of the Architecture.</p><p><strong>Effect:</strong> On a successful hit, the Netrunner's meat-body location is revealed. Arriving consequences (security response, corp goons, etc.) are up to the GM.</p>"
+  },
+  "prototypeToken": {
+    "name": "Raven",
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 20,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "stats.rez"
+    },
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  }
+}

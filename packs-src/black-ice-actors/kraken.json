@@ -1,0 +1,47 @@
+{
+  "_id": "Cl0vw1ZoJUzQr6Vj",
+  "_key": "!actors!Cl0vw1ZoJUzQr6Vj",
+  "name": "Kraken",
+  "type": "blackIce",
+  "img": "icons/svg/mystery-man.svg",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "effects": [],
+  "items": [],
+  "flags": {
+    "automate-net-combat": {
+      "blackIceKey": "kraken",
+      "effectText": "Deals 3d6 direct Brain damage and grapples the Netrunner. The Netrunner cannot Jack Out until the Kraken is defeated."
+    }
+  },
+  "system": {
+    "class": "antipersonnel",
+    "stats": {
+      "per": 4,
+      "spd": 2,
+      "atk": 8,
+      "def": 4,
+      "rez": {
+        "value": 35,
+        "max": 35
+      }
+    },
+    "notes": "<p><em>Anti-Personnel Black ICE.</em> Slow, massive, inescapable. Grabs hold of the Netrunner and won't release them.</p><p><strong>Effect:</strong> 3d6 direct Brain damage. The Netrunner is Grappled — they cannot Jack Out of the Architecture until the Kraken is defeated.</p>"
+  },
+  "prototypeToken": {
+    "name": "Kraken",
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 20,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "stats.rez"
+    },
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  }
+}

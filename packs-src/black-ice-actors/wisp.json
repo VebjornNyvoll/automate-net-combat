@@ -1,0 +1,47 @@
+{
+  "_id": "uoDtcBMaUVR0PuFo",
+  "_key": "!actors!uoDtcBMaUVR0PuFo",
+  "name": "Wisp",
+  "type": "blackIce",
+  "img": "icons/svg/mystery-man.svg",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "effects": [],
+  "items": [],
+  "flags": {
+    "automate-net-combat": {
+      "blackIceKey": "wisp",
+      "effectText": "Ejects the Netrunner from the Architecture. They must jack in again and start from the top floor."
+    }
+  },
+  "system": {
+    "class": "antipersonnel",
+    "stats": {
+      "per": 2,
+      "spd": 4,
+      "atk": 2,
+      "def": 4,
+      "rez": {
+        "value": 15,
+        "max": 15
+      }
+    },
+    "notes": "<p><em>Anti-Personnel Black ICE (Bouncer).</em> Does no damage, but boots the Netrunner out of the Architecture.</p><p><strong>Effect:</strong> On a successful hit, the Netrunner is immediately ejected from the Architecture and must re-enter at the lobby floor.</p>"
+  },
+  "prototypeToken": {
+    "name": "Wisp",
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 20,
+    "displayBars": 20,
+    "bar1": {
+      "attribute": "stats.rez"
+    },
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  }
+}
