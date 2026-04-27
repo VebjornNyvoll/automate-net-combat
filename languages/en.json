@@ -26,15 +26,15 @@
     },
     "dialog": {
       "summonTitle": "Summon Black ICE",
-      "summonPrompt": "Pick a Black ICE type to summon, then click the target netrunner on the canvas.",
+      "summonPrompt": "Pick a Black ICE type. You'll then choose the target netrunner.",
       "blackIceType": "Black ICE",
-      "pickTarget": "Pick Target…",
+      "pickTarget": "Next…",
+      "pickNetrunnerTitle": "Target Netrunner",
+      "pickNetrunnerLabel": "Netrunner on this scene",
+      "pickAttackTargetTitle": "Attack Target",
+      "pickAttackTargetLabel": "Token on this scene",
+      "confirm": "Confirm",
       "cancel": "Cancel"
-    },
-    "prompts": {
-      "pickNetrunner": "Click the target netrunner's token. Esc to cancel.",
-      "invalidNetrunner": "That actor doesn't appear to be a netrunner (no cyberdeck).",
-      "pickAttackTarget": "Click the attack target. Esc to cancel."
     },
     "notifications": {
       "gmOnly": "Only the GM can summon Black ICE.",
@@ -45,7 +45,10 @@
       "summoned": "Summoned {name} targeting {target}.",
       "notBlackIce": "Selected actor is not a Black ICE.",
       "noLinkedProgram": "This Black ICE has no linked program item.",
-      "programDestroyed": "Program {name} has been destroyed (REZ reduced to 0)."
+      "programDestroyed": "Program {name} has been destroyed (REZ reduced to 0).",
+      "noNetrunners": "No netrunners on this scene. A token's actor needs the Netrunner role (or a cyberdeck) to be picked.",
+      "noAttackTargets": "No character or mook tokens on this scene to attack.",
+      "noCandidates": "No matching tokens on this scene."
     },
     "attack": {
       "flavorProgram": "{attacker} attacks {target}'s running programs",

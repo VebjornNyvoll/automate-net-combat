@@ -1,6 +1,6 @@
 import { MODULE_ID, FLAGS, SETTINGS } from "./config.mjs";
 import { getLinkedProgram, getActorLink } from "./links.mjs";
-import { pickTargetToken } from "./ui/target-picker.mjs";
+import { pickTokenFromScene } from "./ui/target-picker.mjs";
 
 /**
  * Roll a CPR-style d10 with exploding 10s and subtracting 1s.
@@ -81,8 +81,11 @@ export async function executeBlackIceAttack(actor, { target, targetMode = "auto"
     }
   }
   if (!resolvedTarget) {
-    resolvedTarget = await pickTargetToken({
-      prompt: game.i18n.localize(`${MODULE_ID}.prompts.pickAttackTarget`),
+    resolvedTarget = await pickTokenFromScene({
+      filter: (a) => a.type === "character" || a.type === "mook",
+      title: game.i18n.localize(`${MODULE_ID}.dialog.pickAttackTargetTitle`),
+      label: game.i18n.localize(`${MODULE_ID}.dialog.pickAttackTargetLabel`),
+      emptyMessage: game.i18n.localize(`${MODULE_ID}.notifications.noAttackTargets`),
     });
     if (!resolvedTarget) return;
   }

@@ -1,7 +1,7 @@
 import { MODULE_ID, SETTINGS } from "../config.mjs";
 import { detectBlackIceKeyFromTile } from "../data/presets.mjs";
 import { pickBlackIceKey } from "./summon-dialog.mjs";
-import { pickTargetToken } from "./target-picker.mjs";
+import { pickNetrunnerFromScene } from "./target-picker.mjs";
 import { summonBlackIce } from "../summon.mjs";
 
 /**
@@ -60,24 +60,11 @@ async function startSummonFlow({ blackIceKey, position } = {}) {
     if (!key) return;
   }
 
-  const targetActor = await pickTargetToken({
-    prompt: game.i18n.localize(`${MODULE_ID}.prompts.pickNetrunner`),
-    invalidMessage: game.i18n.localize(`${MODULE_ID}.prompts.invalidNetrunner`),
-    validate: isLikelyNetrunner,
-  });
+  const targetActor = await pickNetrunnerFromScene();
   if (!targetActor) return;
 
   const dropPosition = position ?? currentDropPosition();
   await summonBlackIce({ blackIceKey: key, targetActor, position: dropPosition });
-}
-
-function isLikelyNetrunner(actor) {
-  if (!actor) return false;
-  if (actor.type !== "character" && actor.type !== "mook") return false;
-  const hasDeck = actor.items?.some?.(
-    (i) => i.type === "cyberdeck" || (i.type === "itemUpgrade" && i.system?.type === "cyberdeck")
-  );
-  return Boolean(hasDeck);
 }
 
 function currentDropPosition() {

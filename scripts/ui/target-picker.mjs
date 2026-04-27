@@ -1,64 +1,105 @@
+import { MODULE_ID } from "../config.mjs";
+
 /**
- * Canvas target picker. Enters a modal mode where the next token click resolves
- * the returned Promise with that token's Actor. Escape or right-click cancels.
+ * Detect whether an actor is a netrunner: prefers a role item named "Netrunner",
+ * falls back to "owns a cyberdeck."
+ */
+export function isNetrunner(actor) {
+  if (!actor) return false;
+  if (actor.type !== "character" && actor.type !== "mook") return false;
+  const hasRole = actor.items?.some?.(
+    (i) => i.type === "role" && /netrunner/i.test(i.name)
+  );
+  if (hasRole) return true;
+  return Boolean(actor.items?.some?.((i) => i.type === "cyberdeck"));
+}
+
+/**
+ * Prompt the GM to pick a netrunner from the tokens on the active scene.
+ * Filters to actors with a Netrunner role; falls back to actors with a cyberdeck
+ * if no role-tagged netrunner is on the scene.
  *
- * @param {object} [opts]
- * @param {(actor: Actor) => boolean} [opts.validate] - return true to accept, false to reject with a toast
- * @param {string} [opts.prompt] - localized prompt shown in a floating hint
- * @param {string} [opts.invalidMessage] - localized error if validate returns false
+ * - 0 candidates → error notification, returns null
+ * - 1 candidate  → auto-resolves with that actor (no dialog)
+ * - 2+           → dialog with a dropdown of token names + actor names
+ *
  * @returns {Promise<Actor|null>}
  */
-export function pickTargetToken({ validate, prompt, invalidMessage } = {}) {
+export async function pickNetrunnerFromScene() {
+  return pickTokenFromScene({
+    filter: (actor) => isNetrunner(actor),
+    title: game.i18n.localize(`${MODULE_ID}.dialog.pickNetrunnerTitle`),
+    label: game.i18n.localize(`${MODULE_ID}.dialog.pickNetrunnerLabel`),
+    emptyMessage: game.i18n.localize(`${MODULE_ID}.notifications.noNetrunners`),
+  });
+}
+
+/**
+ * Generic scene-token picker. Lists tokens whose actor passes `filter`.
+ *
+ * @param {object} opts
+ * @param {(actor: Actor) => boolean} [opts.filter]
+ * @param {string} opts.title
+ * @param {string} opts.label
+ * @param {string} [opts.emptyMessage]
+ * @returns {Promise<Actor|null>}
+ */
+export async function pickTokenFromScene({ filter, title, label, emptyMessage }) {
+  const scene = canvas.scene;
+  if (!scene) {
+    ui.notifications.error(game.i18n.localize(`${MODULE_ID}.notifications.noScene`));
+    return null;
+  }
+  const candidates = scene.tokens.filter((t) => {
+    const actor = t.actor;
+    if (!actor) return false;
+    return filter ? filter(actor) : true;
+  });
+  if (candidates.length === 0) {
+    ui.notifications.warn(
+      emptyMessage ?? game.i18n.localize(`${MODULE_ID}.notifications.noCandidates`)
+    );
+    return null;
+  }
+  if (candidates.length === 1) return candidates[0].actor;
+
+  const options = candidates
+    .map((t) => {
+      const tokenName = foundry.utils.escapeHTML(t.name);
+      const actorName = foundry.utils.escapeHTML(t.actor.name);
+      const detail = tokenName !== actorName ? ` (${actorName})` : "";
+      return `<option value="${t.id}">${tokenName}${detail}</option>`;
+    })
+    .join("");
+
+  const content = `
+    <form class="anc-target-dialog">
+      <div class="form-group">
+        <label>${foundry.utils.escapeHTML(label)}</label>
+        <select name="tokenId">${options}</select>
+      </div>
+    </form>`;
+
   return new Promise((resolve) => {
-    if (!canvas?.ready) {
-      ui.notifications.error("Canvas not ready.");
-      resolve(null);
-      return;
-    }
-
-    const hint = document.createElement("div");
-    hint.className = "anc-target-hint";
-    hint.textContent = prompt ?? "Click a token. Esc to cancel.";
-    document.body.appendChild(hint);
-
-    const cleanup = () => {
-      hint.remove();
-      canvas.stage.off("pointerdown", onCanvasClick);
-      window.removeEventListener("keydown", onKey, true);
-    };
-
-    const onCanvasClick = (event) => {
-      const token = event?.target?.document ?? event?.target?.parent?.document ?? null;
-      // The event target is a PIXI Graphics / Sprite — walk up to Token
-      let placeable = event?.target;
-      while (placeable && !placeable.document) placeable = placeable.parent;
-      const tokenDoc = placeable?.document;
-      if (!tokenDoc || tokenDoc.documentName !== "Token") {
-        ui.notifications.warn("That's not a token. Try again, or press Esc.");
-        return;
-      }
-      const actor = tokenDoc.actor;
-      if (!actor) {
-        ui.notifications.warn("Token has no actor.");
-        return;
-      }
-      if (validate && !validate(actor)) {
-        ui.notifications.warn(invalidMessage ?? "Invalid target.");
-        return;
-      }
-      cleanup();
-      resolve(actor);
-    };
-
-    const onKey = (ev) => {
-      if (ev.key === "Escape") {
-        ev.preventDefault();
-        cleanup();
-        resolve(null);
-      }
-    };
-
-    canvas.stage.on("pointerdown", onCanvasClick);
-    window.addEventListener("keydown", onKey, true);
+    new Dialog({
+      title,
+      content,
+      buttons: {
+        ok: {
+          label: game.i18n.localize(`${MODULE_ID}.dialog.confirm`),
+          callback: (html) => {
+            const id = html[0]?.querySelector("[name=tokenId]")?.value;
+            const tok = id ? scene.tokens.get(id) : null;
+            resolve(tok?.actor ?? null);
+          },
+        },
+        cancel: {
+          label: game.i18n.localize(`${MODULE_ID}.dialog.cancel`),
+          callback: () => resolve(null),
+        },
+      },
+      default: "ok",
+      close: () => resolve(null),
+    }).render(true);
   });
 }

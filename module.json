@@ -2,7 +2,7 @@
   "id": "automate-net-combat",
   "title": "Automate Net Combat",
   "description": "Automate Black ICE netrunning combat — spawn fully-statted Black ICE from a compendium, link them to a target netrunner, and apply attack damage to programs or HP automatically.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "authors": [
     {
       "name": "Vebjørn Nyvoll",
@@ -67,6 +67,6 @@
   },
   "url": "https://github.com/VebjornNyvoll/automate-net-combat",
   "manifest": "https://github.com/VebjornNyvoll/automate-net-combat/releases/latest/download/module.json",
-  "download": "https://github.com/VebjornNyvoll/automate-net-combat/releases/download/v0.1.0/module.zip",
+  "download": "https://github.com/VebjornNyvoll/automate-net-combat/releases/download/v0.1.1/module.zip",
   "bugs": "https://github.com/VebjornNyvoll/automate-net-combat/issues"
 }

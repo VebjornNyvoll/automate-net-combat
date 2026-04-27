@@ -90,13 +90,15 @@
   font-size: 0.85em;
 }
 
-.anc-summon-dialog .form-group {
+.anc-summon-dialog .form-group,
+.anc-target-dialog .form-group {
   display: flex;
   flex-direction: column;
   gap: 4px;
   margin: 8px 0;
 }
 
-.anc-summon-dialog select {
+.anc-summon-dialog select,
+.anc-target-dialog select {
   padding: 4px;
 }
