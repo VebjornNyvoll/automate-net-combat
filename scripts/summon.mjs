@@ -67,12 +67,16 @@ export async function summonBlackIce({ blackIceKey, targetActor, position }) {
   const sourceProgram = await programPack.getDocument(sourceProgramIndex._id);
 
   // Clone source actor to world actors. toObject() strips pack association.
+  const tokenTexture = TOKEN_TEXTURE_BY_KEY[blackIceKey];
   const actorData = sourceActor.toObject();
   delete actorData._id;
   delete actorData._key;
   actorData.items = [];
+  if (tokenTexture) actorData.img = tokenTexture;
   actorData.prototypeToken = foundry.utils.mergeObject(actorData.prototypeToken ?? {}, {
-    texture: { src: TOKEN_TEXTURE_BY_KEY[blackIceKey] ?? actorData.img },
+    texture: { src: tokenTexture ?? actorData.img },
+    actorLink: false,
+    disposition: -1,
   });
   const [createdActor] = await Actor.createDocuments([actorData]);
   if (!createdActor) return null;
@@ -90,22 +94,22 @@ export async function summonBlackIce({ blackIceKey, targetActor, position }) {
     [`flags.${MODULE_ID}.${FLAGS.TARGET_ACTOR_UUID}`]: targetActor?.uuid ?? null,
   });
 
-  // Drop token on canvas.
+  // Drop token on canvas. Use Actor#getTokenDocument so actorId, delta, and other
+  // required fields are set up correctly — bypassing it leaves tokenDocument.actor
+  // null, which crashes CPR's locked-container hook on subsequent drag updates.
   const gridSize = scene.grid.size ?? 100;
-  const tokenData = foundry.utils.mergeObject(createdActor.prototypeToken.toObject(), {
+  const tokenDoc = await createdActor.getTokenDocument({
     x: Math.round((position.x ?? 0) - gridSize / 2),
     y: Math.round((position.y ?? 0) - gridSize / 2),
     width: 1,
     height: 1,
-    texture: { src: TOKEN_TEXTURE_BY_KEY[blackIceKey] ?? createdActor.img },
-    actorLink: false,
-    disposition: -1,
+    texture: { src: tokenTexture ?? createdActor.img },
     flags: {
       [CPR_SYSTEM_ID]: { programUUID: ownedProgram.uuid },
       [MODULE_ID]: { blackIceKey },
     },
   });
-  const [createdToken] = await scene.createEmbeddedDocuments("Token", [tokenData]);
+  const [createdToken] = await scene.createEmbeddedDocuments("Token", [tokenDoc.toObject()]);
 
   if (createdToken) {
     await createdActor.update({
@@ -114,7 +118,7 @@ export async function summonBlackIce({ blackIceKey, targetActor, position }) {
   }
 
   if (game.settings.get(MODULE_ID, SETTINGS.AUTO_COMBAT)) {
-    await addTokenToActiveCombat(createdToken, createdActor);
+    await addToActiveCombat({ blackIceToken: createdToken, blackIceActor: createdActor, targetActor });
   }
 
   const targetName = targetActor?.name ?? game.i18n.localize(`${MODULE_ID}.generic.noTarget`);
@@ -128,22 +132,44 @@ export async function summonBlackIce({ blackIceKey, targetActor, position }) {
   return { actor: createdActor, token: createdToken, program: ownedProgram };
 }
 
-async function addTokenToActiveCombat(tokenDoc, actor) {
-  if (!tokenDoc) return;
+async function addToActiveCombat({ blackIceToken, blackIceActor, targetActor }) {
+  if (!blackIceToken) return;
   let combat = game.combat;
   if (!combat) {
     combat = await Combat.create({ scene: canvas.scene.id, active: true });
   }
-  const existing = combat.combatants.find((c) => c.tokenId === tokenDoc.id);
-  if (existing) return;
-  const spd = Number(actor.system?.stats?.spd ?? 0);
-  const roll = await new Roll(`1d10 + ${spd}`).evaluate();
-  await combat.createEmbeddedDocuments("Combatant", [
-    {
-      tokenId: tokenDoc.id,
+
+  const newCombatants = [];
+
+  if (!combat.combatants.find((c) => c.tokenId === blackIceToken.id)) {
+    const spd = Number(blackIceActor.system?.stats?.spd ?? 0);
+    const roll = await new Roll(`1d10 + ${spd}`).evaluate();
+    newCombatants.push({
+      tokenId: blackIceToken.id,
       sceneId: canvas.scene.id,
-      actorId: actor.id,
+      actorId: blackIceActor.id,
       initiative: roll.total,
-    },
-  ]);
+    });
+  }
+
+  // Add the targeted netrunner if they have a token on this scene and aren't already in.
+  if (targetActor) {
+    const targetToken = canvas.scene.tokens.find(
+      (t) => t.actor?.id === targetActor.id || t.actor?.uuid === targetActor.uuid
+    );
+    if (targetToken && !combat.combatants.find((c) => c.tokenId === targetToken.id)) {
+      const initFormula = targetActor.system?.initiative?.formula ?? "1d10 + @stats.ref.value";
+      const roll = await new Roll(initFormula, targetActor.getRollData?.() ?? {}).evaluate();
+      newCombatants.push({
+        tokenId: targetToken.id,
+        sceneId: canvas.scene.id,
+        actorId: targetActor.id,
+        initiative: roll.total,
+      });
+    }
+  }
+
+  if (newCombatants.length) {
+    await combat.createEmbeddedDocuments("Combatant", newCombatants);
+  }
 }
