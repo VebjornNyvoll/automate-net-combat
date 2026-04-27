@@ -59,7 +59,7 @@ export async function executeBlackIceAttack(actor, { target, targetMode = "auto"
   }
 
   const link = getActorLink(actor);
-  const program = getLinkedProgram(actor);
+  const program = await getLinkedProgram(actor);
   if (!program) {
     ui.notifications.error(
       game.i18n.localize(`${MODULE_ID}.notifications.noLinkedProgram`)

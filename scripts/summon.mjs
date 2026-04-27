@@ -66,6 +66,13 @@ export async function summonBlackIce({ blackIceKey, targetActor, position }) {
   const sourceActor = await actorPack.getDocument(sourceActorIndex._id);
   const sourceProgram = await programPack.getDocument(sourceProgramIndex._id);
 
+  // Per CPR's canonical pattern (cpr-cyberdeck.js#_rezBlackIceToken), Black ICE
+  // programs live in game.items as world-level templates, not as owned items on
+  // the actor. The Black ICE sheet's damage-formula lookup uses
+  // game.items.filter(i => i.uuid === programUUID), so an embedded program would
+  // resolve to "n/a" on the sheet. Use a shared template per Black ICE key.
+  const worldProgram = await ensureWorldProgram(sourceProgram, blackIceKey);
+
   // Clone source actor to world actors. toObject() strips pack association.
   const tokenTexture = TOKEN_TEXTURE_BY_KEY[blackIceKey];
   const actorData = sourceActor.toObject();
@@ -73,6 +80,10 @@ export async function summonBlackIce({ blackIceKey, targetActor, position }) {
   delete actorData._key;
   actorData.items = [];
   if (tokenTexture) actorData.img = tokenTexture;
+  // CPR convention: actor.system.class holds the blackIceType ("antipersonnel" /
+  // "antiprogram"), not the program class string "blackice". Our pack data
+  // already stores it correctly, but make sure stats.rez is a flat object the
+  // CPR damage code can update via stats.rez.value.
   actorData.prototypeToken = foundry.utils.mergeObject(actorData.prototypeToken ?? {}, {
     texture: { src: tokenTexture ?? actorData.img },
     actorLink: false,
@@ -81,23 +92,28 @@ export async function summonBlackIce({ blackIceKey, targetActor, position }) {
   const [createdActor] = await Actor.createDocuments([actorData]);
   if (!createdActor) return null;
 
-  // Embed the program on the actor as an owned item.
-  const programData = sourceProgram.toObject();
-  delete programData._id;
-  delete programData._key;
-  const [ownedProgram] = await createdActor.createEmbeddedDocuments("Item", [programData]);
-
-  // Record link flags on the actor.
+  // Record our own link flags on the actor.
   await createdActor.update({
     [`flags.${MODULE_ID}.${FLAGS.BLACK_ICE_KEY}`]: blackIceKey,
-    [`flags.${MODULE_ID}.${FLAGS.LINKED_PROGRAM_ID}`]: ownedProgram.id,
+    [`flags.${MODULE_ID}.${FLAGS.LINKED_PROGRAM_ID}`]: worldProgram.uuid,
     [`flags.${MODULE_ID}.${FLAGS.TARGET_ACTOR_UUID}`]: targetActor?.uuid ?? null,
   });
 
-  // Drop token on canvas. Use Actor#getTokenDocument so actorId, delta, and other
-  // required fields are set up correctly — bypassing it leaves tokenDocument.actor
-  // null, which crashes CPR's locked-container hook on subsequent drag updates.
+  // Drop token on canvas. Use Actor#getTokenDocument so actorId / delta / etc.
+  // are set up correctly — bypassing it leaves tokenDocument.actor null and
+  // crashes CPR's locked-container hook on drag.
   const gridSize = scene.grid.size ?? 100;
+  // Locate the netrunner's token on this scene (if present) for the
+  // netrunnerTokenId flag, which CPR uses for sheet lookups + sync hooks.
+  const netrunnerToken = targetActor
+    ? scene.tokens.find((t) => t.actor?.id === targetActor.id || t.actor?.uuid === targetActor.uuid)
+    : null;
+  const cprTokenFlags = {
+    programUUID: worldProgram.uuid,
+    sceneId: scene.id,
+  };
+  if (netrunnerToken) cprTokenFlags.netrunnerTokenId = netrunnerToken.id;
+
   const tokenDoc = await createdActor.getTokenDocument({
     x: Math.round((position.x ?? 0) - gridSize / 2),
     y: Math.round((position.y ?? 0) - gridSize / 2),
@@ -105,13 +121,20 @@ export async function summonBlackIce({ blackIceKey, targetActor, position }) {
     height: 1,
     texture: { src: tokenTexture ?? createdActor.img },
     flags: {
-      [CPR_SYSTEM_ID]: { programUUID: ownedProgram.uuid },
+      [CPR_SYSTEM_ID]: cprTokenFlags,
       [MODULE_ID]: { blackIceKey },
     },
   });
   const [createdToken] = await scene.createEmbeddedDocuments("Token", [tokenDoc.toObject()]);
 
   if (createdToken) {
+    // Reverse-link the program back to the spawned token, matching the canonical
+    // CPR pattern so derez/lookup logic in cpr-cyberdeck.js can find this Black
+    // ICE from the program side as well.
+    await worldProgram.update({
+      [`flags.${CPR_SYSTEM_ID}.biTokenId`]: createdToken.id,
+      [`flags.${CPR_SYSTEM_ID}.sceneId`]: scene.id,
+    });
     await createdActor.update({
       [`flags.${MODULE_ID}.${FLAGS.SPAWNED_TOKEN_ID}`]: createdToken.id,
     });
@@ -129,7 +152,44 @@ export async function summonBlackIce({ blackIceKey, targetActor, position }) {
     })
   );
 
-  return { actor: createdActor, token: createdToken, program: ownedProgram };
+  return { actor: createdActor, token: createdToken, program: worldProgram };
+}
+
+const PROGRAM_FOLDER_NAME = "Black ICE Programs (auto)";
+
+/**
+ * Ensure exactly one world-level program template exists per Black ICE key.
+ * Multiple Black ICE actors of the same type share one program template — the
+ * actors carry their own REZ pools, so sharing the template doesn't share HP.
+ */
+async function ensureWorldProgram(sourceProgram, blackIceKey) {
+  const existing = game.items.find(
+    (i) => i.type === "program" && i.getFlag(MODULE_ID, FLAGS.BLACK_ICE_KEY) === blackIceKey
+  );
+  if (existing) return existing;
+
+  const folder = await ensureProgramFolder();
+  const data = sourceProgram.toObject();
+  delete data._id;
+  delete data._key;
+  data.folder = folder?.id ?? null;
+  foundry.utils.setProperty(data, `flags.${MODULE_ID}.${FLAGS.BLACK_ICE_KEY}`, blackIceKey);
+  const [created] = await Item.createDocuments([data]);
+  return created;
+}
+
+async function ensureProgramFolder() {
+  let folder = game.folders.find(
+    (f) => f.type === "Item" && f.name === PROGRAM_FOLDER_NAME
+  );
+  if (folder) return folder;
+  folder = await Folder.create({
+    name: PROGRAM_FOLDER_NAME,
+    type: "Item",
+    color: "#ff2b6d",
+    sorting: "a",
+  });
+  return folder;
 }
 
 async function addToActiveCombat({ blackIceToken, blackIceActor, targetActor }) {
