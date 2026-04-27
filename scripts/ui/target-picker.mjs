@@ -1,5 +1,8 @@
 import { MODULE_ID } from "../config.mjs";
 
+const HTML_ESCAPE_MAP = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+const escapeHtml = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => HTML_ESCAPE_MAP[c]);
+
 /**
  * Detect whether an actor is a netrunner: prefers a role item named "Netrunner",
  * falls back to "owns a cyberdeck."
@@ -65,8 +68,8 @@ export async function pickTokenFromScene({ filter, title, label, emptyMessage })
 
   const options = candidates
     .map((t) => {
-      const tokenName = foundry.utils.escapeHTML(t.name);
-      const actorName = foundry.utils.escapeHTML(t.actor.name);
+      const tokenName = escapeHtml(t.name);
+      const actorName = escapeHtml(t.actor.name);
       const detail = tokenName !== actorName ? ` (${actorName})` : "";
       return `<option value="${t.id}">${tokenName}${detail}</option>`;
     })
@@ -75,7 +78,7 @@ export async function pickTokenFromScene({ filter, title, label, emptyMessage })
   const content = `
     <form class="anc-target-dialog">
       <div class="form-group">
-        <label>${foundry.utils.escapeHTML(label)}</label>
+        <label>${escapeHtml(label)}</label>
         <select name="tokenId">${options}</select>
       </div>
     </form>`;

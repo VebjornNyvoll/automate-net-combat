@@ -1,7 +1,7 @@
 {
   "name": "automate-net-combat",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "description": "Build tooling for the Automate Net Combat Foundry VTT module.",
   "scripts": {
