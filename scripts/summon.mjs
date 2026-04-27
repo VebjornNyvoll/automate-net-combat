@@ -192,44 +192,45 @@ async function ensureProgramFolder() {
   return folder;
 }
 
+/**
+ * Create a fresh Combat encounter for this netrun and seed it with the Black
+ * ICE and the targeted netrunner. NET combat runs on a parallel turn structure
+ * to meat-space combat, so it gets its own tracker rather than joining whatever
+ * encounter is currently active. The new combat is marked active; the previous
+ * one is preserved and selectable from the tracker dropdown.
+ */
 async function addToActiveCombat({ blackIceToken, blackIceActor, targetActor }) {
   if (!blackIceToken) return;
-  let combat = game.combat;
-  if (!combat) {
-    combat = await Combat.create({ scene: canvas.scene.id, active: true });
-  }
+
+  const combat = await Combat.create({ scene: canvas.scene.id, active: true });
+  if (!combat) return;
 
   const newCombatants = [];
 
-  if (!combat.combatants.find((c) => c.tokenId === blackIceToken.id)) {
-    const spd = Number(blackIceActor.system?.stats?.spd ?? 0);
-    const roll = await new Roll(`1d10 + ${spd}`).evaluate();
-    newCombatants.push({
-      tokenId: blackIceToken.id,
-      sceneId: canvas.scene.id,
-      actorId: blackIceActor.id,
-      initiative: roll.total,
-    });
-  }
+  const spd = Number(blackIceActor.system?.stats?.spd ?? 0);
+  const blackIceInit = await new Roll(`1d10 + ${spd}`).evaluate();
+  newCombatants.push({
+    tokenId: blackIceToken.id,
+    sceneId: canvas.scene.id,
+    actorId: blackIceActor.id,
+    initiative: blackIceInit.total,
+  });
 
-  // Add the targeted netrunner if they have a token on this scene and aren't already in.
   if (targetActor) {
     const targetToken = canvas.scene.tokens.find(
       (t) => t.actor?.id === targetActor.id || t.actor?.uuid === targetActor.uuid
     );
-    if (targetToken && !combat.combatants.find((c) => c.tokenId === targetToken.id)) {
+    if (targetToken) {
       const initFormula = targetActor.system?.initiative?.formula ?? "1d10 + @stats.ref.value";
-      const roll = await new Roll(initFormula, targetActor.getRollData?.() ?? {}).evaluate();
+      const targetInit = await new Roll(initFormula, targetActor.getRollData?.() ?? {}).evaluate();
       newCombatants.push({
         tokenId: targetToken.id,
         sceneId: canvas.scene.id,
         actorId: targetActor.id,
-        initiative: roll.total,
+        initiative: targetInit.total,
       });
     }
   }
 
-  if (newCombatants.length) {
-    await combat.createEmbeddedDocuments("Combatant", newCombatants);
-  }
+  await combat.createEmbeddedDocuments("Combatant", newCombatants);
 }
