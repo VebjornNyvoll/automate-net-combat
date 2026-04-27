@@ -24,20 +24,20 @@ export const SETTINGS = {
 
 export const SOCKET_EVENT = `module.${MODULE_ID}`;
 
-/** Token texture paths shipped by the CPR system for each Black ICE type. */
+/** Token icon paths shipped by the CPR system for each Black ICE type. */
 export const TOKEN_TEXTURE_BY_KEY = {
-  asp: `systems/${CPR_SYSTEM_ID}/tiles/netarch/WebP/Asp.webp`,
-  giant: `systems/${CPR_SYSTEM_ID}/tiles/netarch/WebP/Giant.webp`,
-  hellhound: `systems/${CPR_SYSTEM_ID}/tiles/netarch/WebP/Hellhound.webp`,
-  kraken: `systems/${CPR_SYSTEM_ID}/tiles/netarch/WebP/Kraken.webp`,
-  liche: `systems/${CPR_SYSTEM_ID}/tiles/netarch/WebP/Liche.webp`,
-  raven: `systems/${CPR_SYSTEM_ID}/tiles/netarch/WebP/Raven.webp`,
-  scorpion: `systems/${CPR_SYSTEM_ID}/tiles/netarch/WebP/Scorpion.webp`,
-  skunk: `systems/${CPR_SYSTEM_ID}/tiles/netarch/WebP/Skunk.webp`,
-  wisp: `systems/${CPR_SYSTEM_ID}/tiles/netarch/WebP/Wisp.webp`,
-  dragon: `systems/${CPR_SYSTEM_ID}/tiles/netarch/WebP/Dragon.webp`,
-  killer: `systems/${CPR_SYSTEM_ID}/tiles/netarch/WebP/Killer.webp`,
-  sabertooth: `systems/${CPR_SYSTEM_ID}/tiles/netarch/WebP/Sabertooth.webp`,
+  asp: `systems/${CPR_SYSTEM_ID}/icons/netrunning/Asp.png`,
+  giant: `systems/${CPR_SYSTEM_ID}/icons/netrunning/Giant.png`,
+  hellhound: `systems/${CPR_SYSTEM_ID}/icons/netrunning/Hellhound.png`,
+  kraken: `systems/${CPR_SYSTEM_ID}/icons/netrunning/Kraken.png`,
+  liche: `systems/${CPR_SYSTEM_ID}/icons/netrunning/Liche.png`,
+  raven: `systems/${CPR_SYSTEM_ID}/icons/netrunning/Raven.png`,
+  scorpion: `systems/${CPR_SYSTEM_ID}/icons/netrunning/Scorpion.png`,
+  skunk: `systems/${CPR_SYSTEM_ID}/icons/netrunning/Skunk.png`,
+  wisp: `systems/${CPR_SYSTEM_ID}/icons/netrunning/Wisp.png`,
+  dragon: `systems/${CPR_SYSTEM_ID}/icons/netrunning/Dragon.png`,
+  killer: `systems/${CPR_SYSTEM_ID}/icons/netrunning/Killer.png`,
+  sabertooth: `systems/${CPR_SYSTEM_ID}/icons/netrunning/Sabertooth.png`,
 };
 
 export const BLACK_ICE_KEYS = Object.keys(TOKEN_TEXTURE_BY_KEY);
